@@ -8,6 +8,7 @@ import com.sparta.blog_backend.user.jwt.JwtUtil;
 import com.sparta.blog_backend.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,13 +19,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void signup(SignupRequestDto requestDto) { // requestDto : 회원 가입할 데이터
         String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username);
@@ -63,17 +65,14 @@ public class UserService {
                 () -> new IllegalArgumentException("등록된 사용자가 없습니다."));
 
         // 비밀번호 확인
-        if(password.equals(user.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
 
         // JWT(토큰) 생성
-        // 및 쿠키에 저장 후 Response 객체에 추가
-         String token = jwtUtil.createToken(user.getUsername(), user.getRole());
-        // 쿠키에 토큰 담기
+        String token = jwtUtil.createToken(user.getUsername(), user.getRole());
+        // 쿠키에 토큰 담고 Response 객체에 추가
         jwtUtil.addJwtToCookie(token, res);
     }
-
-
-    }
+}
 
