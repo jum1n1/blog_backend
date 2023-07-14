@@ -46,4 +46,18 @@ public class CommentController {
             return ResponseEntity.badRequest().body(new ApiResponseDto("작성자만 삭제 할 수 있습니다",HttpStatus.BAD_REQUEST.value()));
         }
     }
+
+    // 좋아요 누르기
+    @PostMapping("/comments/{id}/like")
+    public ResponseEntity<ApiResponseDto> upLike(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl userDetails ){
+        commentService.upLike(id,userDetails.getUser().getId());
+
+        return ResponseEntity.ok().body(new ApiResponseDto("게시글에 좋아요를 눌렀습니다!",HttpStatus.OK.value()));
+    }
+
+    // 종아요 조회
+    @GetMapping("/comments/{id}/like")
+    public boolean isLiked(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return commentService.isLiked(id, userDetails.getUser().getId());
+    }
 }
