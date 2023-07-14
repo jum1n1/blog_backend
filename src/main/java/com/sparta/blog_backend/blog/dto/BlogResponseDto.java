@@ -1,37 +1,41 @@
 package com.sparta.blog_backend.blog.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.blog_backend.blog.entity.Blog;
+import com.sparta.blog_backend.comment.dto.CommentResponseDto;
+import com.sparta.blog_backend.user.dto.ApiResponseDto;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL) // null 값이 들어갈 경우 아예 빼버림
-public class BlogResponseDto {
+@Setter
+public class BlogResponseDto extends ApiResponseDto {
 
     private Long id;
     private String title;
-    private String name;
     private String content;
     private LocalDateTime craeteAt;
     private LocalDateTime modifiedAt;
+    private String username;
+    private List<CommentResponseDto> comments;
 
-    // 삭제시 사용
-    private Boolean success;
+    private int likeCounts;
 
     public BlogResponseDto(Blog blog) {
         this.id = blog.getId();
         this.title = blog.getTitle();
-        this.name = blog.getName();
         this.content = blog.getContent();
         this.craeteAt = blog.getCreateAt();
         this.modifiedAt = blog.getModifiedAt();
-    }
-
-    // 삭제시 사용
-    public BlogResponseDto(Boolean success){
-        this.success = success;
+        this.username = blog.getUser().getUsername();
+        this.comments = blog.getComments().stream()
+                .map(CommentResponseDto::new)
+                .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
+                .toList();
+        this.likeCounts = blog.getLikeList().size();
     }
 
 }

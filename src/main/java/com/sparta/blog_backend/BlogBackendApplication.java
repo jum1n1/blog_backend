@@ -11,11 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication // spring boot 임을 나타냅
 public class BlogBackendApplication {
 
-    @Bean
-    public PasswordEncoder  passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(BlogBackendApplication.class, args);
     }
