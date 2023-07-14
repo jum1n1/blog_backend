@@ -25,7 +25,7 @@ public class UserController {
 
         try{
             userService.signup(requestDto);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e){ // Lv4 과제 =>  Aop
             return ResponseEntity.badRequest().body(new ApiResponseDto("중복된 username입니다", HttpStatus.BAD_REQUEST.value()));
         }
 
@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<ApiResponseDto> login(@RequestBody AuthRequestDto loginRequestDto, HttpServletResponse response){
         try{
             userService.login(loginRequestDto);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e){ // Lv4 과제 =>  Aop
             return ResponseEntity.badRequest().body(new ApiResponseDto("회원을 찾을 수 없습니다",HttpStatus.BAD_REQUEST.value()));
         }
 

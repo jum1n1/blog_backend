@@ -60,7 +60,7 @@ public class BlogController {
         try {
             BlogResponseDto result = blogService.updateBlog(id, requestDto, userDetails.getUser());
             return ResponseEntity.ok().body(result);
-        } catch (RejectedExecutionException e) {
+        } catch (RejectedExecutionException e) { // Lv4 과제 =>  Aop
             return ResponseEntity.badRequest().body(new ApiResponseDto("작성자만 수정 할 수 있습니다.", HttpStatus.BAD_REQUEST.value()));
         }
     }
@@ -72,7 +72,7 @@ public class BlogController {
         try {
             blogService.deleteBlog(id, userDetails.getUser());
             return ResponseEntity.ok().body(new ApiResponseDto("게시글 삭제 성공", HttpStatus.BAD_REQUEST.value()));
-        } catch (RejectedExecutionException e) {
+        } catch (RejectedExecutionException e) { // Lv4 과제 =>  Aop
             return ResponseEntity.badRequest().body(new ApiResponseDto("작성자만 삭제 할 수 있습니다.", HttpStatus.BAD_REQUEST.value()));
         }
     }
